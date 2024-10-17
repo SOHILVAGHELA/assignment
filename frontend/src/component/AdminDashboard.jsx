@@ -8,13 +8,13 @@ function AdminDashboard() {
 
   useEffect(() => {
     console.log("auth", auth);
-    !auth.token && navigate("/login");
+    !auth.token && navigate("/");
   }, [auth]);
 
   const handleLogout = () => {
     localStorage.clear("auth");
     setAuth({ user: null, token: "" });
-    navigate("/login");
+    navigate("/");
   };
   return (
     <div className="p-5 flex justify-between">

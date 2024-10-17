@@ -1,16 +1,22 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+useNavigate;
 function Register() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
-  const [role, setRole] = useState("");
+  const [role, setRole] = useState("user");
+  const navigate = useNavigate();
+  console.log("role", role);
   const handleSubmit = async (e) => {
     e.preventDefault();
     // console.log(username);
     // console.log(password);
     // console.log(email);
     // console.log(role);
+    setLoading(true);
     try {
       const res = await axios.post("http://localhost:4004/user/register", {
         username,
@@ -19,7 +25,12 @@ function Register() {
         role,
       });
       console.log(res);
+      if (res.status == 200) {
+        navigate("/");
+        setLoading(false);
+      }
     } catch (error) {
+      setLoading(false);
       console.log(error);
     }
   };
@@ -60,20 +71,21 @@ function Register() {
           </div>
           <div className="mb-2">
             <label className="block ">role:</label>
-            <input
-              value={role}
+            <select
               onChange={(e) => setRole(e.target.value)}
               className="w-full px-4 py-2 border focus:outline-none focus:ring-2 focus:ring-blue-300"
-              type="text"
-              placeholder="Enter Role"
-            />
+            >
+              <option value="user">User</option>
+              <option value="admin">Admin</option>
+            </select>
           </div>
           <div className="mb-2">
             <button
               type="submit"
-              className="w-full px-4 py-2 bg-blue-500 rounded text-white"
+              disabled={loading}
+              className="w-full px-4 py-2 bg-blue-500 rounded text-white disabled:opacity-50"
             >
-              Submit
+              {loading ? "Loading..." : "Submit"}
             </button>
           </div>
         </form>
